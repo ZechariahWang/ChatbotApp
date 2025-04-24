@@ -5,32 +5,61 @@ class HomePage(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        self.grid_rowconfigure((0, 5), weight=1)
-        self.grid_columnconfigure((0, 2), weight=1)
-        self.grid_columnconfigure(1, weight=0)
+        
+        # Configure grid
+        self.grid_rowconfigure((0, 1, 2, 3), weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        
+        # Create main content frame
+        self.content_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.content_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
+        self.content_frame.grid_rowconfigure((0, 1, 2), weight=1)
+        self.content_frame.grid_columnconfigure(0, weight=1)
 
-        row = 1  
+        # Add welcome text
+        welcome_label = ctk.CTkLabel(
+            self.content_frame,
+            text="Mental Support Chatbot",
+            font=("Roboto", 32, "bold"),
+            text_color=("#2B2B2B", "#FFFFFF")
+        )
+        welcome_label.grid(row=0, column=0, pady=(0, 20))
 
-        try:
-            image = ctk.CTkImage(
-                light_image=Image.open("assets/logo.png"),
-                dark_image=Image.open("assets/logo.png"),
-                size=(100, 100)
-            )
-            image_label = ctk.CTkLabel(self, image=image, text="")
-            image_label.grid(row=row, column=1, pady=10)
-            row += 1
-        except Exception as e:
-            print(f"Error loading image: {e}")
+        # Add description
+        description_label = ctk.CTkLabel(
+            self.content_frame,
+            text="Personal AI assistant to help you with your mental health.\nStart a conversation or customize your experience.",
+            font=("Roboto", 16),
+            text_color=("#2B2B2B", "#FFFFFF"),
+            justify="center"
+        )
+        description_label.grid(row=1, column=0, pady=(0, 40))
 
+        # Create buttons frame
+        buttons_frame = ctk.CTkFrame(self.content_frame, fg_color="transparent")
+        buttons_frame.grid(row=2, column=0, sticky="nsew")
+        buttons_frame.grid_columnconfigure((0, 1), weight=1)
 
-        label = ctk.CTkLabel(self, text="Chatbot", font=("Roboto", 24, "bold"))
-        label.grid(row=row, column=1, pady=(0, 20))
-        row += 1
+        # Add chat button
+        chat_button = ctk.CTkButton(
+            buttons_frame,
+            text="Start Chatting",
+            command=lambda: controller.show_page("ChatPage"),
+            height=50,
+            font=("Roboto", 16, "bold"),
+            corner_radius=10
+        )
+        chat_button.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-        chat_button = ctk.CTkButton(self, text="Go to Chat", command=lambda: controller.show_page("ChatPage"))
-        chat_button.grid(row=row, column=1, pady=10)
-        row += 1
-
-        settings_button = ctk.CTkButton(self, text="Settings", command=lambda: controller.show_page("SettingsPage"))
-        settings_button.grid(row=row, column=1, pady=10)
+        # Add settings button
+        settings_button = ctk.CTkButton(
+            buttons_frame,
+            text="Settings",
+            command=lambda: controller.show_page("SettingsPage"),
+            height=50,
+            font=("Roboto", 16, "bold"),
+            corner_radius=10,
+            fg_color="transparent",
+            border_width=2
+        )
+        settings_button.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
